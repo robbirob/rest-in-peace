@@ -1,0 +1,22 @@
+package de.rfr.restinpeace.api.annotations;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * Binds an HTTP header value to a handler method parameter.
+ *
+ * @since 0.1.0
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.PARAMETER)
+public @interface HeaderParam {
+    /**
+     * Returns the header name.
+     *
+     * @return header name
+     */
+    String value();
+}
