@@ -2,7 +2,7 @@
 
 `rest-in-peace` is a small annotation-based REST framework for Java with a strict focus on simplicity and minimal external dependencies.
 
-Current release: `v0.1.0`
+Current release: `v0.1.1`
 
 ## Requirements
 
@@ -140,4 +140,4 @@ Open: `target/site/apidocs/index.html`
 
 ## Status
 
-- This repository is prepared for `v0.1.0` release with JDK transport, startup validation, binding/conversion, and optional Jackson integration.
+- The `v0.1.x` line is available with JDK transport, startup validation, binding/conversion, and optional Jackson integration.

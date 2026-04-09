@@ -50,3 +50,9 @@
 - No mandatory extra runtime dependency.
 - Lets the project focus on framework behavior (routing/binding/invocation).
 - Transport remains replaceable behind framework request/response abstractions.
+
+## Build and release automation
+
+- CI workflow (`.github/workflows/ci.yml`) runs `mvn -B -ntp clean verify` for pushes and pull requests on `development`.
+- Release workflow (`.github/workflows/release.yml`) triggers on `v*` tags, builds artifacts, and attaches JARs to GitHub Releases.
+- Maven build is configured to attach `-sources.jar` and `-javadoc.jar` during `mvn install`.

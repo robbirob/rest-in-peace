@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- Add GitHub Actions CI workflow for pushes and pull requests to `development`.
+- Add tag-driven GitHub release workflow that uploads built JAR artifacts.
+
+## v0.1.1 - 2026-04-09
+
+### Build and distribution
+
+- Configure Maven to attach `-sources.jar` and `-javadoc.jar` during `mvn install`.
+- Improve IDE consumption from local Maven cache by making sources and javadocs consistently available.
+
 ## v0.1.0 - 2026-04-09
 
 ### Highlights

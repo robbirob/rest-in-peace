@@ -19,4 +19,4 @@
 - Add more integration tests for malformed JSON and codec fallback behavior
 - Add benchmark-style smoke checks for routing and binding hot paths
 
-All items in this file are intentionally future-facing and are not required for `v0.1.0`.
+All items in this file are intentionally future-facing and are not required for the `v0.1.x` releases.
