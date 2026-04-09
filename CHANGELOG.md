@@ -2,8 +2,15 @@
 
 ## Unreleased
 
+- No changes yet.
+
+## v0.1.2 - 2026-04-09
+
+### Build and release
+
 - Add GitHub Actions CI workflow for pushes and pull requests to `development`.
 - Add tag-driven GitHub release workflow that uploads built JAR artifacts.
+- Align release tag and artifact naming so `v0.1.2` publishes `0.1.2` artifacts.
 
 ## v0.1.1 - 2026-04-09
 
