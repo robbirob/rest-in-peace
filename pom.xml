@@ -6,21 +6,21 @@
 
     <groupId>de.rfr.restinpeace</groupId>
     <artifactId>rest-in-peace</artifactId>
-    <version>0.1.4-SNAPSHOT</version>
+    <version>0.1.5-SNAPSHOT</version>
     <name>rest-in-peace</name>
     <description>A tiny annotation-based REST framework for Java</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
-        <junit.jupiter.version>5.11.0</junit.jupiter.version>
+        <junit.jupiter.version>6.1.0</junit.jupiter.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
+            <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.18.2</version>
+            <version>3.2.0</version>
             <optional>true</optional>
         </dependency>
         <dependency>

@@ -1,6 +1,6 @@
 package de.rfr.restinpeace.json.jackson;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import de.rfr.restinpeace.api.codec.BodyCodec;
 import de.rfr.restinpeace.core.http.MediaTypes;
 
