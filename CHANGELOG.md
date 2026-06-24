@@ -4,6 +4,17 @@
 
 - No changes yet.
 
+## v0.1.4 - 2026-06-24
+
+### Fixes
+
+- Harden HTTP content handling.
+
+### Build
+
+- Upgrade optional Jackson integration to Jackson 3 using `tools.jackson.core:jackson-databind` 3.2.0.
+- Upgrade JUnit Jupiter to 6.1.0.
+
 ## v0.1.2 - 2026-04-09
 
 ### Build and release
