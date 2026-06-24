@@ -8,6 +8,7 @@ import de.rfr.restinpeace.core.http.FrameworkError;
 import de.rfr.restinpeace.core.http.FrameworkRequest;
 import de.rfr.restinpeace.core.http.FrameworkResponse;
 import de.rfr.restinpeace.core.http.HttpMethod;
+import de.rfr.restinpeace.core.http.JsonStrings;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -148,7 +149,8 @@ public final class JdkHttpServerAdapter {
         }
 
         if (body instanceof FrameworkError error) {
-            String json = "{\"code\":\"" + escapeJson(error.code()) + "\",\"message\":\"" + escapeJson(error.message()) + "\"}";
+            String json = "{\"code\":\"" + JsonStrings.escape(error.code()) + "\",\"message\":\""
+                + JsonStrings.escape(error.message()) + "\"}";
             return json.getBytes(StandardCharsets.UTF_8);
         }
 
@@ -166,21 +168,6 @@ public final class JdkHttpServerAdapter {
         }
 
         return body.toString().getBytes(StandardCharsets.UTF_8);
-    }
-
-    private static String escapeJson(String value) {
-        if (value == null) {
-            return "";
-        }
-        StringBuilder builder = new StringBuilder(value.length());
-        for (int i = 0; i < value.length(); i++) {
-            char c = value.charAt(i);
-            if (c == '\\' || c == '"') {
-                builder.append('\\');
-            }
-            builder.append(c);
-        }
-        return builder.toString();
     }
 
     private static String firstHeader(Map<String, List<String>> headers, String name) {

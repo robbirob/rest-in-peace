@@ -2,10 +2,10 @@ package de.rfr.restinpeace.json.jackson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.rfr.restinpeace.api.codec.BodyCodec;
+import de.rfr.restinpeace.core.http.MediaTypes;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -65,10 +65,6 @@ public final class JacksonBodyCodec implements BodyCodec {
     }
 
     private static boolean isJson(String contentType) {
-        if (contentType == null) {
-            return false;
-        }
-        String normalized = contentType.toLowerCase(Locale.ROOT);
-        return normalized.contains("application/json") || normalized.endsWith("+json");
+        return MediaTypes.isJson(contentType);
     }
 }

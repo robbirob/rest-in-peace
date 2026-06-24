@@ -11,13 +11,14 @@ import de.rfr.restinpeace.core.error.UnsupportedMediaTypeException;
 import de.rfr.restinpeace.core.http.FrameworkError;
 import de.rfr.restinpeace.core.http.FrameworkRequest;
 import de.rfr.restinpeace.core.http.FrameworkResponse;
+import de.rfr.restinpeace.core.http.JsonStrings;
+import de.rfr.restinpeace.core.http.MediaTypes;
 import de.rfr.restinpeace.core.routing.RouteMatch;
 import de.rfr.restinpeace.core.routing.RouteRegistry;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -54,8 +55,8 @@ public final class RequestExecutor {
     public FrameworkResponse execute(FrameworkRequest request) {
         try {
             return executeInternal(request);
-        } catch (Throwable throwable) {
-            return toFrameworkResponse(resolveException(unwrap(throwable)));
+        } catch (Exception exception) {
+            return toFrameworkResponse(resolveException(unwrap(exception)));
         }
     }
 
@@ -87,8 +88,12 @@ public final class RequestExecutor {
     }
 
     private HttpResponse<?> resolveException(Throwable throwable) {
-        return exceptionMappers.map(throwable)
-            .orElseGet(() -> defaultExceptionResponse(throwable));
+        try {
+            return exceptionMappers.map(throwable)
+                .orElseGet(() -> defaultExceptionResponse(throwable));
+        } catch (Exception mapperException) {
+            return defaultExceptionResponse(mapperException);
+        }
     }
 
     private HttpResponse<?> defaultExceptionResponse(Throwable throwable) {
@@ -118,9 +123,7 @@ public final class RequestExecutor {
             throw new UnsupportedMediaTypeException("missing Content-Type, expected " + consumes);
         }
 
-        String expected = consumes.toLowerCase(Locale.ROOT);
-        String actual = requestContentType.toLowerCase(Locale.ROOT);
-        if (!actual.contains(expected)) {
+        if (!MediaTypes.matches(requestContentType, consumes)) {
             throw new UnsupportedMediaTypeException("unsupported Content-Type: " + requestContentType);
         }
     }
@@ -171,21 +174,7 @@ public final class RequestExecutor {
     }
 
     private static String frameworkErrorJson(FrameworkError error) {
-        return "{\"code\":\"" + escapeJson(error.code()) + "\",\"message\":\"" + escapeJson(error.message()) + "\"}";
-    }
-
-    private static String escapeJson(String value) {
-        if (value == null) {
-            return "";
-        }
-        StringBuilder builder = new StringBuilder(value.length());
-        for (int i = 0; i < value.length(); i++) {
-            char c = value.charAt(i);
-            if (c == '\\' || c == '"') {
-                builder.append('\\');
-            }
-            builder.append(c);
-        }
-        return builder.toString();
+        return "{\"code\":\"" + JsonStrings.escape(error.code()) + "\",\"message\":\""
+            + JsonStrings.escape(error.message()) + "\"}";
     }
 }

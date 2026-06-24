@@ -9,6 +9,7 @@ import de.rfr.restinpeace.api.annotations.POST;
 import de.rfr.restinpeace.api.annotations.Produces;
 import de.rfr.restinpeace.api.annotations.QueryParam;
 import de.rfr.restinpeace.api.response.HttpResponse;
+import de.rfr.restinpeace.core.http.FrameworkError;
 import de.rfr.restinpeace.core.http.FrameworkRequest;
 import de.rfr.restinpeace.core.http.FrameworkResponse;
 import de.rfr.restinpeace.core.http.HttpMethod;
@@ -98,6 +99,22 @@ class RequestExecutorTest {
     }
 
     @Test
+    void mapsExceptionMapperFailuresTo500() {
+        RestApp app = RestApp.builder()
+            .register(new TestController())
+            .exception(IllegalStateException.class, ex -> {
+                throw new RuntimeException("mapper failed");
+            })
+            .build();
+
+        FrameworkResponse response = app.config().requestExecutor().execute(request(HttpMethod.GET, "/test/error"));
+
+        assertEquals(500, response.status());
+        assertEquals("application/json", response.headers().get("Content-Type"));
+        assertEquals("{\"code\":\"internal_server_error\",\"message\":\"unhandled exception\"}", response.body());
+    }
+
+    @Test
     void keepsExplicitContentTypeWhenProducesIsSet() {
         RestApp app = RestApp.builder().register(new TestController()).build();
 
@@ -142,6 +159,55 @@ class RequestExecutorTest {
         ));
 
         assertEquals(415, response.status());
+    }
+
+    @Test
+    void acceptsConsumesWithParameters() {
+        RestApp app = RestApp.builder().register(new TestController()).build();
+
+        FrameworkResponse response = app.config().requestExecutor().execute(request(
+            HttpMethod.POST,
+            "/test/consume",
+            Map.of(),
+            Map.of(),
+            "hello",
+            "Application/Json; charset=utf-8"
+        ));
+
+        assertEquals(200, response.status());
+        assertEquals("hello", response.body());
+    }
+
+    @Test
+    void rejectsContentTypeThatOnlyContainsExpectedType() {
+        RestApp app = RestApp.builder().register(new TestController()).build();
+
+        FrameworkResponse response = app.config().requestExecutor().execute(request(
+            HttpMethod.POST,
+            "/test/consume",
+            Map.of(),
+            Map.of(),
+            "hello",
+            "text/plain; note=application/json"
+        ));
+
+        assertEquals(415, response.status());
+    }
+
+    @Test
+    void escapesFrameworkErrorJsonControlCharacters() {
+        RestApp app = RestApp.builder()
+            .register(new TestController())
+            .exception(IllegalStateException.class, ex -> HttpResponse.status(
+                418,
+                new FrameworkError("bad\ncode", "quote\" slash\\ tab\t")
+            ))
+            .build();
+
+        FrameworkResponse response = app.config().requestExecutor().execute(request(HttpMethod.GET, "/test/error"));
+
+        assertEquals(418, response.status());
+        assertEquals("{\"code\":\"bad\\ncode\",\"message\":\"quote\\\" slash\\\\ tab\\t\"}", response.body());
     }
 
     @Test

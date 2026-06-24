@@ -64,7 +64,7 @@ public final class ParameterBinder {
         return switch (parameter.kind()) {
             case PATH -> resolveScalar(pathParams.get(parameter.name()), parameter, true);
             case QUERY -> resolveScalar(first(request.queryParams().get(parameter.name())), parameter, false);
-            case HEADER -> resolveScalar(first(request.headers().get(parameter.name())), parameter, false);
+            case HEADER -> resolveScalar(firstHeader(request.headers(), parameter.name()), parameter, false);
             case BODY -> resolveBody(request, parameter.type());
             case UNANNOTATED -> throw new BadRequestException("unannotated parameter is not supported: " + parameter.parameter());
         };
@@ -129,6 +129,15 @@ public final class ParameterBinder {
             return null;
         }
         return values.getFirst();
+    }
+
+    private static String firstHeader(Map<String, List<String>> headers, String name) {
+        for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+            if (entry.getKey() != null && entry.getKey().equalsIgnoreCase(name)) {
+                return first(entry.getValue());
+            }
+        }
+        return null;
     }
 
     private static Class<?> optionalType(ParameterDescriptor parameter) {

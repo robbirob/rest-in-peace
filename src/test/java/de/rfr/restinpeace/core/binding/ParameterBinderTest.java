@@ -2,6 +2,7 @@ package de.rfr.restinpeace.core.binding;
 
 import de.rfr.restinpeace.api.annotations.Body;
 import de.rfr.restinpeace.api.annotations.GET;
+import de.rfr.restinpeace.api.annotations.HeaderParam;
 import de.rfr.restinpeace.api.annotations.POST;
 import de.rfr.restinpeace.api.annotations.Path;
 import de.rfr.restinpeace.api.annotations.PathParam;
@@ -50,6 +51,15 @@ class ParameterBinderTest {
         HandlerMethod pathHandler = handler("pathRequired");
 
         assertThrows(BadRequestException.class, () -> binder.bind(pathHandler, request(), Map.of()));
+    }
+
+    @Test
+    void resolvesHeadersCaseInsensitively() {
+        ParameterBinder binder = new ParameterBinder(new ConverterRegistry(), List.of());
+
+        Object[] args = binder.bind(handler("header"), requestWithHeader("X-Request-Id", "abc"), Map.of());
+
+        assertEquals("abc", args[0]);
     }
 
     @Test
@@ -132,6 +142,10 @@ class ParameterBinderTest {
         return new TestRequest(HttpMethod.GET, "/bind", Map.of(name, List.of(value)), Map.of(), new byte[0], null, false);
     }
 
+    private static FrameworkRequest requestWithHeader(String name, String value) {
+        return new TestRequest(HttpMethod.GET, "/bind", Map.of(), Map.of(name, List.of(value)), new byte[0], null, false);
+    }
+
     private static FrameworkRequest failingBodyRequest() {
         return new TestRequest(HttpMethod.POST, "/bind", Map.of(), Map.of(), new byte[0], "text/plain", true);
     }
@@ -154,6 +168,12 @@ class ParameterBinderTest {
         @Path("/query-null")
         public String queryNullable(@QueryParam("q") Integer q) {
             return q == null ? "none" : q.toString();
+        }
+
+        @GET
+        @Path("/header")
+        public String header(@HeaderParam("x-request-id") String requestId) {
+            return requestId;
         }
 
         @POST

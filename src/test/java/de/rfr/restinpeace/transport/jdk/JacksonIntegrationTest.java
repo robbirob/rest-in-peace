@@ -15,6 +15,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class JacksonIntegrationTest {
     private RestApp app;
@@ -38,6 +40,15 @@ class JacksonIntegrationTest {
 
         assertEquals(200, response.statusCode());
         assertEquals("hello alice", response.body());
+    }
+
+    @Test
+    void jacksonCodecRecognizesJsonMediaTypesPrecisely() {
+        JacksonBodyCodec codec = new JacksonBodyCodec();
+
+        assertTrue(codec.canRead(CreateRequest.class, "application/json; charset=utf-8"));
+        assertTrue(codec.canRead(CreateRequest.class, "application/vnd.example+json; charset=utf-8"));
+        assertFalse(codec.canRead(CreateRequest.class, "text/plain; note=application/json"));
     }
 
     private HttpResponse<String> request(String method, String path, String body) throws IOException, InterruptedException {
