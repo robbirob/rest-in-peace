@@ -6,7 +6,7 @@
 
     <groupId>de.rfr.restinpeace</groupId>
     <artifactId>rest-in-peace</artifactId>
-    <version>0.1.3-SNAPSHOT</version>
+    <version>0.1.4-SNAPSHOT</version>
     <name>rest-in-peace</name>
     <description>A tiny annotation-based REST framework for Java</description>
 
