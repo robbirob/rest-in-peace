@@ -11,7 +11,6 @@
 - Test release for validating the new manual release workflow.
 - Add a manually triggered GitHub Actions release workflow that derives the release version from `pom.xml`, creates the release tag, and bumps the next `-SNAPSHOT` version.
 - Harden release workflows with narrower token permissions, release environment approval, and tag/version validation.
-- Update GitHub Actions dependencies to Node.js 24-compatible versions.
 
 ## v0.1.4 - 2026-06-24
 
