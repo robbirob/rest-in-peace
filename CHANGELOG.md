@@ -2,7 +2,9 @@
 
 ## Unreleased
 
-- No changes yet.
+### Build and release
+
+- Update GitHub Actions dependencies to Node.js 24-compatible versions.
 
 ## v0.1.5 - 2026-06-26
 
