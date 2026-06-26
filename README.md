@@ -2,7 +2,6 @@
 
 `rest-in-peace` is a small annotation-based REST framework for Java with a strict focus on simplicity and minimal external dependencies.
 
-Current release: `v0.1.2`
 
 ## Requirements
 
